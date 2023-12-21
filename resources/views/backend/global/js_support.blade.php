@@ -1,0 +1,10 @@
+<script src="{{ asset('backend/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('backend/js/scripts.js') }}"></script>
+{{-- <script src="{{ asset('backend/js/chart.min.js') }}"></script>
+<script src="{{ asset('backend/assets/demo/chart-area-demo.js') }}"></script>
+<script src="{{ asset('backend/assets/demo/chart-bar-demo.js') }}"></script> --}}
+<script src="{{ asset('backend/js/datatables.min.js') }}"></script>
+<script src="{{ asset('backend/js/datatables-simple-demo.js') }}"></script>
+<script src="{{ asset('backend/js/jquery-3.6.4.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
