@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Auth\AuthController;
 use App\Http\Controllers\Admin\Authority\ManageAuthorityController;
 use App\Http\Controllers\Admin\Collector\ManageCollectorController;
+use App\Http\Controllers\Admin\Ward\ManageWardController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
 use App\Http\Controllers\Admin\RolePermission\RolePermissionController;
 use App\Http\Controllers\Admin\Setting\WebsiteSettingController;
@@ -66,6 +67,16 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/collector-user/active/{id}', [ManageCollectorController::class, 'makeCollectorUserActive']);
         //manage collectors
 
+        //manage wards
+        Route::get('wards', [ManageWardController::class, 'viewWards'])->name('viewWards');
+        Route::get('/manage-ward/delete/{id}', [ManageWardController::class, 'deleteWard']);
+        Route::get('/manage-ward/add', [ManageWardController::class, 'addWard'])->name('adminAddWard');
+        Route::post('/manage-ward/add', [ManageWardController::class, 'addWardSubmit'])->name('adminAddWardSubmit');
+        Route::get('/manage-ward/modify/{id}', [ManageWardController::class, 'modifyWard'])->name('adminModifyWard');
+        Route::post('/manage-ward/modify/{id}', [ManageWardController::class, 'modifyWardSubmit'])->name('adminModifyWardSubmit');
+        //manage wards
+
+
         /* role permissions */
         Route::get('/website-settings', [WebsiteSettingController::class, 'getWebsiteSettings'])->name('getWebsiteSettings');
         Route::post('/save-website-settings', [WebsiteSettingController::class, 'saveWebsiteSettings']);
@@ -77,7 +88,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/delete-role-permission/{id}', [RolePermissionController::class, 'rolePermissionDelete'])->name('deleteRole');
         /* role permissions */
 
-        
+
     });
 });
 

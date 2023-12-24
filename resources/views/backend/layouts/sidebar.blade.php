@@ -27,6 +27,15 @@
                     </a>
                 @endif
 
+                @if (\App\Models\User::hasPermission(Auth::user(), \App\Http\Controllers\Enum\AdminPermissionEnum::MANAGE_COLLECTORS))
+                    <div class="sb-sidenav-menu-heading">ওয়ার্ড</div>
+                    <a class="nav-link @if (!empty($menu) && $menu == 'manage_ward') active @endif"
+                        href="{{ route('viewWards') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                        ওয়ার্ড
+                    </a>
+                @endif
+
                 <div class="sb-sidenav-menu-heading">কালেক্টর/অপারেটর</div>
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
                     aria-expanded="false" aria-controls="collapseLayouts">
