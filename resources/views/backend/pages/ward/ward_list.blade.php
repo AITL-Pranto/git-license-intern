@@ -16,10 +16,10 @@
                 <div class="card-header">
                     <i class="fas fa-table me-1"></i>
                     ওয়ার্ড তালিকা | মোট : <span class="badge bg-primary">{{ $count }}</span>
-
-                    <a href="{{ route('adminAddWard') }}" class="btn m-b-xs btn-sm btn-primary btn-addon float-end"
-                        id="add_btn"><i class="fa fa-plus"></i>নতুন ওয়ার্ড যুক্ত করুন
-                    </a>
+                    <button data-id="add_id" data-bs-toggle="modal" data-bs-target="#form_modal"
+                        class="btn m-b-xs btn-sm btn-primary btn-addon float-end" id="add_btn"><i
+                            class="fa fa-plus"></i>নতুন ওয়ার্ড যুক্ত করুন
+                    </button>
                 </div>
                 <div class="card-body">
                     @include('messages.error')
@@ -43,9 +43,10 @@
                                         <td>{{ $ward->bn_name }}</td>
                                         <td>{{ $ward->ward_no }}</td>
                                         <td>
-                                            <a class="dropdown-item edit_btn" href="{{route("adminModifyWard",$ward->id)}}">
+                                            <button class="dropdown-item edit_btn" data-bs-toggle="modal"
+                                                data-bs-target="#form_modal" data-id="{{ $ward->id }}">
                                                 <i class="fas fa-pencil"></i>
-                                            </a>
+                                            </button>
                                         </td>
                                         <td>
                                             <button data-bs-toggle="modal" data-bs-target="#delete_{{ $ward->id }}"
@@ -95,6 +96,81 @@
                 </div>
             </div>
 
+
+            <!-- Role Permission Handle Modal -->
+            <div class="modal fade" id="form_modal" tabindex="-1" aria-labelledby="form_modal" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modal_title">Add</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="text-center load_image" style="margin-top: 23px;">
+                            <img src="{{ asset('images/ring-alt.gif') }}" style="width:50px;" alt="">
+
+                            <div>লোডিং হচ্ছে.....</div>
+                        </div>
+                        {!! Form::open(['url' => '/admin/save-ward', 'id' => 'modal_form', 'files' => false]) !!}
+                        <div class="modal-body" id="modal_body"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল করুন</button>
+                            <button type="submit" id="saveBtn" class="btn btn-primary single-submit-btn">সংরক্ষণ
+                                করুন</button>
+                        </div>
+                        {!! Form::close() !!}
+                    </div>
+                </div>
+            </div>
+            <!-- Role Permission Handle Modal -->
+
         </div>
     </main>
 @stop
+
+@section('backend_custom_scripts')
+    {!! \App\UtilityFunction::getToastrMessage(Session::get('TOASTR_MESSAGE')) !!}
+    <script>
+        $(document).ready(function() {
+            $("#add_btn").click(function() {
+                var id = $(this).data('id');
+                $("#modal_body").empty();
+                $('.load_image').show();
+                $.ajax({
+                    type: "POST",
+                    url: $('#modal_form').attr('action') + '?add_id=' + id,
+                    data: $('#modal_form').serialize(),
+                    dataType: "json",
+                    success: function(data) {
+                        $('.modal-title').html('নতুন ওয়ার্ড যুক্ত করুন');
+                        $("#modal_body").html(data.data_generate);
+                        $('.load_image').hide();
+                    }
+                }).fail(function(data) {
+                    var errors = data.responseJSON;
+                    console.log(errors);
+                });
+            });
+
+            $(".edit_btn").click(function() {
+                var id = $(this).data('id');
+                $("#modal_body").empty();
+                $('.load_image').show();
+                $.ajax({
+                    type: "POST",
+                    url: $('#modal_form').attr('action') + '?edit_id=' + id,
+                    data: $('#modal_form').serialize(),
+                    dataType: "json",
+                    success: function(data) {
+                        $('.modal-title').html('সম্পাদনা করুন');
+                        $("#modal_body").html(data.data_generate);
+                        $('.load_image').hide();
+                    }
+                }).fail(function(data) {
+                    var errors = data.responseJSON;
+                    console.log(errors);
+                });
+            });
+        });
+    </script>
+@stop
+

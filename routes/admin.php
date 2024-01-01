@@ -74,6 +74,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/manage-ward/add', [ManageWardController::class, 'addWardSubmit'])->name('adminAddWardSubmit');
         Route::get('/manage-ward/modify/{id}', [ManageWardController::class, 'modifyWard'])->name('adminModifyWard');
         Route::post('/manage-ward/modify/{id}', [ManageWardController::class, 'modifyWardSubmit'])->name('adminModifyWardSubmit');
+        Route::post('/save-ward', [ManageWardController::class, 'wardSave']);
         //manage wards
 
 
