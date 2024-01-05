@@ -62,14 +62,14 @@ class ManageUserInfoController extends Controller
                 $data_generate = '';
                 $data_generate .= '<div class="form-group"><div class="row">';
                 $data_generate .= '<div class="col-sm-6"><div class="form-group"><label class="required_field">ব্যবহারকারীর নাম</label>
-                                <select required type="text" class="form-control" name="user_id" value="' . $userInfo->user_id . '" >';
+                                <select class="form-select" required type="text" class="form-control" name="user_id" value="' . $userInfo->user_id . '" >';
                 foreach ($users as $user) {
                     $selected = ($userInfo->user_id == $user->id) ? 'selected' : '';
                     $data_generate .= '<option value="' . $user->id . '" ' . $selected . '>' . $user->id . '-' . $user->username . '</option>';
                 }
                 $data_generate .= '</select></div></div>';
                 $data_generate .= '<div class="col-sm-6"><div class="form-group"><label class="required_field">রক্তের গ্রুপ</label>
-                                <select required type="text" class="form-control" name="blood_group" value="' . $userInfo->blood_group . '" >';
+                                <select class="form-select"  required type="text" class="form-control" name="blood_group" value="' . $userInfo->blood_group . '" >';
                 $bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
                 foreach ($bloodTypes as $bloodType) {
                     $selected = ($userInfo->blood_group == $bloodType) ? 'selected' : '';
@@ -77,12 +77,10 @@ class ManageUserInfoController extends Controller
                 }
                 $data_generate .= '</select></div></div>';
 
-                $predefinedHobbies = ['Fishing', 'Watching TV', 'Reading'];
-                $data_generate .= '<div class="col-sm-12"><div class="form-group"><label class="required_field">শখ</label>';
-                // Predefined hobby values
-                $predefinedHobbies = ['Fishing', 'Watching TV', 'Reading'];
 
-                // Generate HTML for checkboxes
+
+                $data_generate .= '<div class="col-sm-12"><div class="form-group"><label class="required_field">শখ</label>';
+                $predefinedHobbies = ['Fishing', 'Watching TV', 'Reading'];
                 $data_generate .= '<div class="form-group">';
                 foreach ($predefinedHobbies as $hobby) {
                     $checked = (in_array($hobby, $user_hobbies)) ? 'checked' : '';
@@ -92,8 +90,25 @@ class ManageUserInfoController extends Controller
                     </div>";
                 }
                 $data_generate .= '</div>';
-
                 $data_generate .= '</div></div>';
+
+                $data_generate .= '<div class="col-sm-12"><div class="form-group"><label class="required_field">লিঙ্গ</label>';
+                $genderOptions = ['male', 'female', 'other'];
+                $data_generate .= '<div class="form-group">';
+                foreach ($genderOptions as $gender) {
+                    $checked = ($userInfo->gender == $gender) ? 'checked' : ''; // Set 'checked' attribute for the current gender
+                    $data_generate .= "<div class='form-check form-check-inline'>
+                                <input type='radio' class='form-check-input' name='gender' value='$gender' $checked>
+                                    <label class='form-check-label'>$gender</label>
+                                    </div>";
+                    }
+                $data_generate .= '</div></div>';
+
+                $data_generate .= '<div class="col-sm-12"><div class="form-group"><label class="required_field">বিস্তারিত</label>';
+                $data_generate .= '<textarea class="form-control" name="user_details">'. $userInfo->user_details .'</textarea>';
+                $data_generate .= '</div></div>';
+
+
                 $data_generate .= '</div></div>';
 
                 if (!isset($_GET['add_id']))
@@ -101,6 +116,7 @@ class ManageUserInfoController extends Controller
 
                 return response()->json(array('success' => true, 'data_generate' => $data_generate));
             } else {
+                //dd($request);
                 $id = $request->input('edit_id');
 
                 if (isset($id)) {
@@ -143,7 +159,14 @@ class ManageUserInfoController extends Controller
                 $userInfo->user_id = $request['user_id'];
                 $userInfo->blood_group = $request['blood_group'];
                 $userInfo->user_hobbies = json_encode($request->input('user_hobbies'));
-                $userInfo->save();
+                $userInfo->gender = $request['gender'];
+                $userInfo->user_details = $request['user_details'];
+                try {
+                    $userInfo->save();
+                }
+                catch(Exception $e){
+                    return dd($e->getMessage());
+                };
 
                 if (isset($id))
                     return redirect()->back()->with('TOASTR_MESSAGE', MessageTypeEnum::SUCCESS . trans('messages.lang.update_success_message'));
