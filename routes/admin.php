@@ -76,7 +76,8 @@ Route::group(['prefix' => 'admin'], function () {
 
         //manage wards
         Route::get('userinfo', [ManageUserInfoController::class, 'viewUserInfo'])->name('viewUserInfo');
-        //manage wards
+        Route::get('/manage-userinfo/delete/{id}', [ManageUserInfoController::class, 'deleteUserInfo']);
+        Route::post('/save-userinfo', [ManageUserInfoController::class, 'userInfoSave']);
 
 
         /* role permissions */

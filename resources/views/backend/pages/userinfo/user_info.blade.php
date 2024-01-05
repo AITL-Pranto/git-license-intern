@@ -76,7 +76,7 @@
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
                                                         data-bs-dismiss="modal">বাতিল করুন</button>
-                                                    <a href="{{ url('admin/manage-ward/delete/' . $userinfo->id) }}"
+                                                    <a href="{{ url('admin/manage-userinfo/delete/' . $userinfo->id) }}"
                                                         class="btn btn-primary">মুছে ফেলুন</a>
                                                 </div>
                                             </div>
@@ -112,7 +112,7 @@
 
                             <div>লোডিং হচ্ছে.....</div>
                         </div>
-                        {!! Form::open(['url' => '/admin/save-ward', 'id' => 'modal_form', 'files' => false]) !!}
+                        {!! Form::open(['url' => '/admin/save-userinfo', 'id' => 'modal_form', 'files' => false]) !!}
                         <div class="modal-body" id="modal_body"></div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল করুন</button>
