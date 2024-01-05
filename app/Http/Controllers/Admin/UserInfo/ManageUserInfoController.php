@@ -53,25 +53,47 @@ class ManageUserInfoController extends Controller
         try {
             $userInfo = new UserInfo();
             $users = User::all();
-
+            $user_hobbies = [];
             if (isset($_GET['edit_id']) || isset($_GET['add_id'])) {
                 if (isset($_GET['edit_id'])) {
                     $userInfo = UserInfo::findOrFail($_GET['edit_id']);
+                    $user_hobbies = json_decode($userInfo->user_hobbies);
                 }
                 $data_generate = '';
                 $data_generate .= '<div class="form-group"><div class="row">';
                 $data_generate .= '<div class="col-sm-6"><div class="form-group"><label class="required_field">ব্যবহারকারীর নাম</label>
-                                <select required type="text" class="form-control" name="user_id" value="'. $userInfo->user_id .'" >';
+                                <select required type="text" class="form-control" name="user_id" value="' . $userInfo->user_id . '" >';
                 foreach ($users as $user) {
-                    $data_generate .= '<option value="'. $user->id .'">'. $user->id .'-'. $user->username .'</option>';
+                    $selected = ($userInfo->user_id == $user->id) ? 'selected' : '';
+                    $data_generate .= '<option value="' . $user->id . '" ' . $selected . '>' . $user->id . '-' . $user->username . '</option>';
                 }
                 $data_generate .= '</select></div></div>';
-                $data_generate .= '<div class="col-sm-6"><div class="form-group"><label class="required_field">ওয়ার্ডের নাম</label>
-                                <select required type="text" class="form-control" name="user_id" value="'. $userInfo->user_id .'" >';
-                foreach ($users as $user) {
-                    $data_generate .= '<option value="'. $user->id .'">'. $user->id .'-'. $user->username .'</option>';
+                $data_generate .= '<div class="col-sm-6"><div class="form-group"><label class="required_field">রক্তের গ্রুপ</label>
+                                <select required type="text" class="form-control" name="blood_group" value="' . $userInfo->blood_group . '" >';
+                $bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+                foreach ($bloodTypes as $bloodType) {
+                    $selected = ($userInfo->blood_group == $bloodType) ? 'selected' : '';
+                    $data_generate .= "<option value=\"$bloodType\" $selected>$bloodType</option>";
                 }
                 $data_generate .= '</select></div></div>';
+
+                $predefinedHobbies = ['Fishing', 'Watching TV', 'Reading'];
+                $data_generate .= '<div class="col-sm-12"><div class="form-group"><label class="required_field">শখ</label>';
+                // Predefined hobby values
+                $predefinedHobbies = ['Fishing', 'Watching TV', 'Reading'];
+
+                // Generate HTML for checkboxes
+                $data_generate .= '<div class="form-group">';
+                foreach ($predefinedHobbies as $hobby) {
+                    $checked = (in_array($hobby, $user_hobbies)) ? 'checked' : '';
+                    $data_generate .= "<div class='form-check'>
+                            <input type='checkbox' class='form-check-input' name='user_hobbies[]' value='$hobby' $checked>
+                                <label class='form-check-label'>$hobby</label>
+                    </div>";
+                }
+                $data_generate .= '</div>';
+
+                $data_generate .= '</div></div>';
                 $data_generate .= '</div></div>';
 
                 if (!isset($_GET['add_id']))
@@ -81,7 +103,7 @@ class ManageUserInfoController extends Controller
             } else {
                 $id = $request->input('edit_id');
 
-                if(isset($id)){
+                if (isset($id)) {
                     $userInfo = UserInfo::find($id);
                 }
 
@@ -118,8 +140,10 @@ class ManageUserInfoController extends Controller
 
                 //if (!WorkFlowUsers::with('getApplicationFormWorkflowUser')->where('user_id', $admin_user_id)->exists()) {
 
-                    $userInfo->user_id = $request['user_id'];
-                    $userInfo->save();
+                $userInfo->user_id = $request['user_id'];
+                $userInfo->blood_group = $request['blood_group'];
+                $userInfo->user_hobbies = json_encode($request->input('user_hobbies'));
+                $userInfo->save();
 
                 if (isset($id))
                     return redirect()->back()->with('TOASTR_MESSAGE', MessageTypeEnum::SUCCESS . trans('messages.lang.update_success_message'));
