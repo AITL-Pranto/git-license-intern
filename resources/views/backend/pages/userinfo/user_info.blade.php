@@ -15,10 +15,10 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-table me-1"></i>
-                    ওয়ার্ড তালিকা | মোট : <span class="badge bg-primary">{{ $count }}</span>
+                    ব্যবহারকারীর তথ্য তালিকা | মোট : <span class="badge bg-primary">{{ $count }}</span>
                     <button data-id="add_id" data-bs-toggle="modal" data-bs-target="#form_modal"
                         class="btn m-b-xs btn-sm btn-primary btn-addon float-end" id="add_btn"><i
-                            class="fa fa-plus"></i>নতুন ওয়ার্ড যুক্ত করুন
+                            class="fa fa-plus"></i>ব্যবহারকারীর তথ্য যুক্ত করুন
                     </button>
                 </div>
                 <div class="card-body">
@@ -143,7 +143,7 @@
                     data: $('#modal_form').serialize(),
                     dataType: "json",
                     success: function(data) {
-                        $('.modal-title').html('নতুন ওয়ার্ড যুক্ত করুন');
+                        $('.modal-title').html('নতুন ব্যবহারকারীর তথ্য যুক্ত করুন');
                         $("#modal_body").html(data.data_generate);
                         $('.load_image').hide();
                     }
