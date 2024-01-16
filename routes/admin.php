@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\Dashboard\DashboardController;
 use App\Http\Controllers\Admin\RolePermission\RolePermissionController;
 use App\Http\Controllers\Admin\Setting\WebsiteSettingController;
 use App\Http\Controllers\Language\SwitchLanguageController;
+use App\Http\Controllers\Admin\UserInfo\ManageUserInfoController;
 use App\Http\Controllers\Log\LogViewerController;
 use Illuminate\Support\Facades\Route;
 
@@ -70,11 +71,13 @@ Route::group(['prefix' => 'admin'], function () {
         //manage wards
         Route::get('wards', [ManageWardController::class, 'viewWards'])->name('viewWards');
         Route::get('/manage-ward/delete/{id}', [ManageWardController::class, 'deleteWard']);
-        Route::get('/manage-ward/add', [ManageWardController::class, 'addWard'])->name('adminAddWard');
-        Route::post('/manage-ward/add', [ManageWardController::class, 'addWardSubmit'])->name('adminAddWardSubmit');
-        Route::get('/manage-ward/modify/{id}', [ManageWardController::class, 'modifyWard'])->name('adminModifyWard');
-        Route::post('/manage-ward/modify/{id}', [ManageWardController::class, 'modifyWardSubmit'])->name('adminModifyWardSubmit');
+        Route::post('/save-ward', [ManageWardController::class, 'wardSave']);
         //manage wards
+
+        //manage wards
+        Route::get('userinfo', [ManageUserInfoController::class, 'viewUserInfo'])->name('viewUserInfo');
+        Route::get('/manage-userinfo/delete/{id}', [ManageUserInfoController::class, 'deleteUserInfo']);
+        Route::post('/save-userinfo', [ManageUserInfoController::class, 'userInfoSave']);
 
 
         /* role permissions */
